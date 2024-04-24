@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package name="wisdmStsimConnector" displayName="WISDM to ST-Sim Connector" description="Connector package between WISDM and ST-Sim" version="1.0.0">
+
+<builtFor package="wisdm" version="2.0.0"/>
+<builtFor package="stsim" version="4.0.0"/>
+
+<dataSheet name="Options" displayName="Options" isSingleRow="True">
+	<column name="Model" displayName="Target model" dataType="Integer" validationType="List" formula1="0:Boosted Regression Tree|1:Generalized Linear Model|2:Maxent|3:Randon Forest|4:Ensemble"/>
+	<column name="BuildFrom" displayName="Build transition spatial multipliers from" dataType="Integer" validationType="List" formula1="0:Probability map|1:Binary map"/>
+	<column name="BuildFor" displayName="Build transition spatial multipliers for" dataType="Integer" validationType="Datasheet" formula1="stsim_TransitionType"/>
+	<column name="Timestep" displayName="Timestep" dataType="Integer" isOptional="True"/>
+</dataSheet>
+
+<!--Prepare Transition Spatial Multipliers-->
+<transformer
+	name="WisdmToStsim"
+	displayName="Prepare WISDM output for ST-Sim"
+	programName="Rscript"
+	programArguments="prepare-transition-spatial-multipliers.R"
+	condaEnv="wisdm-stsim-connector-r-conda.yml"
+	condaEnvVersion="1">
+	<!--configurationSheet="stsim_RunControl"
+	isStochasticTime="True"
+	TransformerSpecificOutput="False"-->
+		<dataSheet name="Options" type="Input"/>
+		<dataSheet name="wisdm_OutputSpatial" type="Input"/>
+		<dataSheet name="wisdm_OutputEnsemble" type="Input"/>
+		<dataSheet name="stsim_InitialConditionsSpatial" type="Input"/>
+		<dataSheet name="stsim_TransitionSpatialMultiplier" type="Output"/>
+</transformer>
+
+<!--Scenario Datafeeds Layout-->
+<layout type="Scenario">
+	<item name="Options"/>
+</layout> 
+
+</package>
