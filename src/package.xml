@@ -17,7 +17,7 @@
 	displayName="Prepare WISDM output for ST-Sim"
 	programName="Rscript"
 	programArguments="prepare-transition-spatial-multipliers.R"
-	condaEnv="wisdm-stsim-connector-r-conda.yml"
+	condaEnv="wisdm-conda-s3.yml"
 	condaEnvVersion="1">
 	<!--configurationSheet="stsim_RunControl"
 	isStochasticTime="True"
