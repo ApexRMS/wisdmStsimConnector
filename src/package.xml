@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package name="wisdmStsimConnector" displayName="WISDM to ST-Sim Connector" description="Connector package between WISDM and ST-Sim" version="1.0.0">
+<package name="wisdmStsimConnector" displayName="WISDM to ST-Sim Connector" description="Connector package between WISDM and ST-Sim" version="1.0.1">
 
-<builtFor package="wisdm" version="2.0.0"/>
+<builtFor package="wisdm" version="2.1.0"/>
 <builtFor package="stsim" version="4.0.0"/>
 
 <dataSheet name="Options" displayName="Options" isSingleRow="True">
