@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package name="wisdmStsimConnector" displayName="WISDM to ST-Sim Connector" description="Connector package between WISDM and ST-Sim" version="1.0.1">
+<package name="wisdmStsimConnector" displayName="WISDM to ST-Sim Connector" description="Connector package between WISDM and ST-Sim" version="1.2.0" minSyncroSimVersion="3.1.0">
 
-<builtFor package="wisdm" version="2.1.0"/>
-<builtFor package="stsim" version="4.0.0"/>
+<builtFor package="wisdm" version="2.2.0"/>
+<builtFor package="stsim" version="4.3.8"/>
 
 <dataSheet name="Options" displayName="Options" isSingleRow="True">
 	<column name="Model" displayName="Target model" dataType="Integer" validationType="List" formula1="0:Boosted Regression Tree|1:Generalized Linear Model|2:Maxent|3:Randon Forest|4:Ensemble"/>
@@ -18,7 +18,7 @@
 	programName="Rscript"
 	programArguments="prepare-transition-spatial-multipliers.R"
 	condaEnv="wisdm-conda-s3.yml"
-	condaEnvVersion="1">
+	condaEnvVersion="2">
 	<!--configurationSheet="stsim_RunControl"
 	isStochasticTime="True"
 	TransformerSpecificOutput="False"-->
