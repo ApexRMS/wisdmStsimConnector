@@ -56,7 +56,7 @@ if (optionsSheet$BuildFrom == "Probability map"){
    fpath <-  ensembleOutputsSheet$ProbabilityRasterMean 
    if (is.na(fpath)){ fpath <- ensembleOutputsSheet$ProbabilityRasterSum }
   } else {
-    fpath <- spatialOutputsSheet$ProbabilityRaster[spatialOutputsSheet$ModelsID == optionsSheet$Model]
+    fpath <- spatialOutputsSheet$ProbabilityRaster[as.character(spatialOutputsSheet$ModelsID) == as.character(optionsSheet$Model)]
   }
 }
 if (optionsSheet$BuildFrom == "Binary map"){
@@ -64,7 +64,7 @@ if (optionsSheet$BuildFrom == "Binary map"){
     fpath <-  ensembleOutputsSheet$BinaryRasterMean 
     if (is.na(fpath)){ fpath <- ensembleOutputsSheet$BinaryRasterSum }
   } else {
-    fpath <- spatialOutputsSheet$BinaryRaster[spatialOutputsSheet$ModelsID == optionsSheet$Model]
+    fpath <- spatialOutputsSheet$BinaryRaster[as.character(spatialOutputsSheet$ModelsID) == as.character(optionsSheet$Model)]
   }
 }
 
@@ -94,7 +94,8 @@ writeRaster(outRast,
             NAflag= -9999,
             overwrite = T)
 
-# save raster to transition spatial multiplier datasheet 
+# save raster to transition spatial multiplier datasheet
+transitionSpatialMultiplierSheet[1, ] <- NA # empty datasheet has no rows to fill
 transitionSpatialMultiplierSheet$Timestep <- optionsSheet$Timestep
 transitionSpatialMultiplierSheet$TransitionGroupId <- str_c(optionsSheet$BuildFor, " [Type]")
 transitionSpatialMultiplierSheet$MultiplierFileName <- outPath
