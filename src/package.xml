@@ -9,6 +9,8 @@
 	<column name="BuildFrom" displayName="Build transition spatial multipliers from" dataType="Integer" validationType="List" formula1="0:Probability map|1:Binary map"/>
 	<column name="BuildFor" displayName="Build transition spatial multipliers for" dataType="Integer" validationType="Datasheet" formula1="stsim_TransitionType"/>
 	<column name="Timestep" displayName="Timestep" dataType="Integer" isOptional="True"/>
+	<column name="MultiplierMinimum" displayName="Multiplier at 0% suitability" dataType="Double" defaultValue="0" validationType="Decimal" validationCondition="GreaterEqual" formula1="0"/>
+	<column name="MultiplierMaximum" displayName="Multiplier at 100% suitability" dataType="Double" defaultValue="1" validationType="Decimal" validationCondition="GreaterEqual" formula1="0"/>
 </dataSheet>
 
 <!--Prepare Transition Spatial Multipliers-->
@@ -34,5 +36,7 @@
 <layout type="Scenario">
 	<item name="Options"/>
 </layout> 
+
+<updateProvider className="SyncroSim.Core.XMLUpdateProvider" classAssembly="SyncroSim.Core"/>
 
 </package>

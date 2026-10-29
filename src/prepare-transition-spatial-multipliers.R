@@ -48,21 +48,42 @@ if(is.na(optionsSheet$BuildFor)){ stop("Please select the ST-Sim transition type
 
 # Prepare WISDM outputs for ST-Sim ----------------------------------------------
 
-# load  initial conditions rasters 
+# Converts a WISDM raster to a transition spatial multiplier: rescales it to a
+# 0-1 suitability using the largest value the WISDM output can take, then maps
+# suitability linearly onto [multMin, multMax]
+toMultiplier <- function(r, maxValue, multMin, multMax) {
+  multMin + (r / maxValue) * (multMax - multMin)
+}
+
+# multiplier range; blank values keep the original 0-1 behaviour
+multMin <- if (is.null(optionsSheet$MultiplierMinimum) || is.na(optionsSheet$MultiplierMinimum)) 0 else optionsSheet$MultiplierMinimum
+multMax <- if (is.null(optionsSheet$MultiplierMaximum) || is.na(optionsSheet$MultiplierMaximum)) 1 else optionsSheet$MultiplierMaximum
+
+# load  initial conditions rasters
 stratumRast <- rast(initialConditionsSheet$StratumFileName) # plot(stratumRast)
 
+# select the WISDM raster and the largest value it can take: probability maps
+# are 0-100, binary maps 0/1, and sum ensembles add one map per model
 if (optionsSheet$BuildFrom == "Probability map"){
+  maxValue <- 100
   if (optionsSheet$Model == "Ensemble"){
-   fpath <-  ensembleOutputsSheet$ProbabilityRasterMean 
-   if (is.na(fpath)){ fpath <- ensembleOutputsSheet$ProbabilityRasterSum }
+   fpath <-  ensembleOutputsSheet$ProbabilityRasterMean
+   if (is.na(fpath)){
+     fpath <- ensembleOutputsSheet$ProbabilityRasterSum
+     maxValue <- 100 * sum(!is.na(spatialOutputsSheet$ProbabilityRaster))
+   }
   } else {
     fpath <- spatialOutputsSheet$ProbabilityRaster[as.character(spatialOutputsSheet$ModelsID) == as.character(optionsSheet$Model)]
   }
 }
 if (optionsSheet$BuildFrom == "Binary map"){
+  maxValue <- 1
   if (optionsSheet$Model == "Ensemble"){
-    fpath <-  ensembleOutputsSheet$BinaryRasterMean 
-    if (is.na(fpath)){ fpath <- ensembleOutputsSheet$BinaryRasterSum }
+    fpath <-  ensembleOutputsSheet$BinaryRasterMean
+    if (is.na(fpath)){
+      fpath <- ensembleOutputsSheet$BinaryRasterSum
+      maxValue <- sum(!is.na(spatialOutputsSheet$BinaryRaster))
+    }
   } else {
     fpath <- spatialOutputsSheet$BinaryRaster[as.character(spatialOutputsSheet$ModelsID) == as.character(optionsSheet$Model)]
   }
@@ -77,7 +98,7 @@ outRast <- crop(outRast, stratumRast)
 progressBar(type = "step")
 outRast <- mask(outRast, stratumRast)
 progressBar(type = "step")
-outRast <- outRast/100
+outRast <- toMultiplier(outRast, maxValue, multMin, multMax)
 progressBar(type = "step")
 
 
