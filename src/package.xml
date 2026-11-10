@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package name="wisdmStsimConnector" displayName="WISDM to ST-Sim Connector" description="Connector package between WISDM and ST-Sim" version="1.2.0" minSyncroSimVersion="3.1.0">
+<package name="wisdmStsimConnector" displayName="WISDM to ST-Sim Connector" description="Connector package between WISDM and ST-Sim" version="1.3.0" minSyncroSimVersion="3.1.27">
 
-<builtFor package="wisdm" version="2.2.0"/>
-<builtFor package="stsim" version="4.3.8"/>
+<builtFor package="wisdm" version="2.6.1"/>
+<builtFor package="stsim" version="4.5.4"/>
 
 <dataSheet name="Options" displayName="Options" isSingleRow="True">
-	<column name="Model" displayName="Target model" dataType="Integer" validationType="List" formula1="0:Boosted Regression Tree|1:Generalized Linear Model|2:Maxent|3:Randon Forest|4:Ensemble"/>
+	<column name="Model" displayName="Target model" dataType="Integer" validationType="List" formula1="0:Boosted Regression Trees|1:Generalized Linear Model|2:Maxent|3:Random Forest|4:Ensemble|5:Generalized Linear Model - LASSO|6:Generalized Additive Model"/>
 	<column name="BuildFrom" displayName="Build transition spatial multipliers from" dataType="Integer" validationType="List" formula1="0:Probability map|1:Binary map"/>
 	<column name="BuildFor" displayName="Build transition spatial multipliers for" dataType="Integer" validationType="Datasheet" formula1="stsim_TransitionType"/>
 	<column name="Timestep" displayName="Timestep" dataType="Integer" isOptional="True"/>
+	<column name="MultiplierMinimum" displayName="Multiplier at 0% suitability" dataType="Double" defaultValue="0" validationType="Decimal" validationCondition="GreaterEqual" formula1="0"/>
+	<column name="MultiplierMaximum" displayName="Multiplier at 100% suitability" dataType="Double" defaultValue="1" validationType="Decimal" validationCondition="GreaterEqual" formula1="0"/>
 </dataSheet>
 
 <!--Prepare Transition Spatial Multipliers-->
@@ -17,8 +19,8 @@
 	displayName="Prepare WISDM output for ST-Sim"
 	programName="Rscript"
 	programArguments="prepare-transition-spatial-multipliers.R"
-	condaEnv="wisdm-conda-s3.yml"
-	condaEnvVersion="2">
+	condaEnv="wisdm-r-conda.yml"
+	condaEnvVersion="7">
 	<!--configurationSheet="stsim_RunControl"
 	isStochasticTime="True"
 	TransformerSpecificOutput="False"-->
@@ -26,6 +28,7 @@
 		<dataSheet name="wisdm_OutputSpatial" type="Input"/>
 		<dataSheet name="wisdm_OutputEnsemble" type="Input"/>
 		<dataSheet name="stsim_InitialConditionsSpatial" type="Input"/>
+		<dataSheet name="stsim_InitialConditionsSpatialProperties" type="Input"/>
 		<dataSheet name="stsim_TransitionSpatialMultiplier" type="Output"/>
 </transformer>
 
@@ -33,5 +36,7 @@
 <layout type="Scenario">
 	<item name="Options"/>
 </layout> 
+
+<updateProvider className="SyncroSim.Core.XMLUpdateProvider" classAssembly="SyncroSim.Core"/>
 
 </package>
